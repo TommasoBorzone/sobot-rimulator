@@ -16,10 +16,7 @@
 # 
 # Email mccrea.engineering@gmail.com for questions, comments, or to report bugs.
 
-
-
-
-
+import copy
 from math import *
 from differential_drive_dynamics import *
 from polygon import *
@@ -28,12 +25,14 @@ from proximity_sensor import *
 from robot_supervisor_interface import *
 from supervisor import *
 from wheel_encoder import *
+from random import *
 
 # Khepera III Properties
 K3_WHEEL_RADIUS = 0.021         # meters
 K3_WHEEL_BASE_LENGTH = 0.0885   # meters
 K3_WHEEL_TICKS_PER_REV = 2765
 K3_MAX_WHEEL_DRIVE_RATE = 15.0  # rad/s
+K3_INIT_POS_RANGE = 3.0
 
 # Khepera III Dimensions
 K3_BOTTOM_PLATE = [[ -0.024,  0.064 ],
@@ -64,16 +63,23 @@ K3_SENSOR_POSES = [[ -0.038,  0.048,  128 ], # x, y, theta_degrees
 class Robot: # Khepera III robot 
   
   def __init__( self ):
+    # initial position
+    x0      = random() * K3_INIT_POS_RANGE
+    y0      = random() * K3_INIT_POS_RANGE
+    theta0  = -pi + ( random() * 2 * pi )
+    self.pose_init = Pose(x0, y0, theta0)
+
+   # pose
+    self.pose = Pose(self.pose_init)
+
     # geometry
     self.geometry = Polygon( K3_BOTTOM_PLATE )
     self.global_geometry = Polygon( K3_BOTTOM_PLATE ) # actual geometry in world space
+    self.global_geometry = self.geometry.get_transformation_to_pose( self.pose )
 
     # wheel arrangement
     self.wheel_radius = K3_WHEEL_RADIUS             # meters
     self.wheel_base_length = K3_WHEEL_BASE_LENGTH   # meters
-
-    # pose
-    self.pose = Pose( 0.0, 0.0, 0.0 )
 
     # wheel encoders
     self.left_wheel_encoder = WheelEncoder( K3_WHEEL_TICKS_PER_REV )
@@ -114,6 +120,7 @@ class Robot: # Khepera III robot
     # update all of the sensors
     for ir_sensor in self.ir_sensors:
       ir_sensor.update_position()
+
   
   # set the drive rates (angular velocities) for this robot's wheels in rad/s 
   def set_wheel_drive_rates( self, v_l, v_r ):

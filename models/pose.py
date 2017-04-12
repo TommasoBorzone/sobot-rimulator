@@ -26,7 +26,12 @@ from utils import math_util
 class Pose:
 
   def __init__( self, *args ):
-    if len( args ) == 2: # initialize using a vector ( vect, theta )
+    if len( args ) == 1: # initialize using a copy constractor ( original_pose )
+      try:
+        self.__deepcopy__(args[0])
+      except WrongTypeExeption:
+        raise TypeError( "Trying to copy a Pose from a Non-Pose object" )
+    elif len( args ) == 2: # initialize using a vector ( vect, theta )
       vect = args[0]
       theta = args[1]
 
@@ -44,15 +49,34 @@ class Pose:
     else:
       raise TypeError( "Wrong number of arguments. Pose requires 2 or 3 arguments to initialize" )
 
-  # get a new pose given by this pose transformed to a given reference pose
+  def __deepcopy__(self, original_pose):
+      orig_vect, orig_theta = original_pose.vunpack()
+
+      self.x = orig_vect[0]
+      self.y = orig_vect[1]
+      self.theta = orig_theta
+      
+  # get a new global pose given by this relative pose and the global pose of the reference PR, PrefG ----> PG
   def transform_to( self, reference_pose ):
-    rel_vect, rel_theta = self.vunpack()            # elements of this pose (the relative pose)
-    ref_vect, ref_theta = reference_pose.vunpack()  # elements of the reference pose
+    rel_vect, rel_theta = self.vunpack()            # elements of this pose (in the relative frame)
+    ref_vect, ref_theta = reference_pose.vunpack()  # elements of the reference pose (in the global frame)
 
     # construct the elements of the transformed pose
     result_vect_d = linalg.rotate_vector( rel_vect, ref_theta )
     result_vect = linalg.add( ref_vect, result_vect_d ) 
     result_theta = ref_theta + rel_theta
+
+    return Pose( result_vect, result_theta )
+
+  # get a new relative pose given by this global pose and the global pose of the reference PG, PrefG ---->PR
+  def transform_to_GG2R( self, reference_pose ):
+    rel_vect, rel_theta = self.vunpack()            # elements of this pose (in the global frame)
+    ref_vect, ref_theta = reference_pose.vunpack()  # elements of the reference pose (in the global frame)
+
+    # construct the elements of the transformed pose
+    result_vect_d = linalg.add( rel_vect, [-ref_vect[0], -ref_vect[1]] ) 
+    result_vect = linalg.rotate_vector( result_vect_d, -ref_theta )
+    result_theta = rel_theta - ref_theta
 
     return Pose( result_vect, result_theta )
    

@@ -111,6 +111,15 @@ def rotate_and_translate_vectors( vects, theta, tvect ):
 
   return rtvects
 
+# get the result of translating and rotating a set of vectors
+def translate_and_rotate_vectors( vects, theta, tvect ):
+  rtvects = []
+  for a in vects:
+    a = add( a, tvect ) 
+    rtvects.append( rotate_vector( a, theta ) )
+    
+  return rtvects
+
 # determine which side of a line a point lies on
 def determine_side_of_line( lpoint1, lpoint2, tpoint ):
   # returns  1 if the point is to the left of the line
