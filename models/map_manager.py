@@ -60,28 +60,25 @@ class MapManager:
     goal_min_dist = GOAL_MIN_DIST
     goal_max_dist = GOAL_MAX_DIST
 
+
     # BUILD RANDOM ELEMENTS
     # generate the goal
-    goals = []
-    for robot in world.robots:
-      goal_dist_range = goal_max_dist - goal_min_dist
-      dist = goal_min_dist + ( random() * goal_dist_range )
-      phi = -pi + ( random() * 2 * pi )
-      x = dist * sin( phi )
-      y = dist * cos( phi )
-      goal = [ x, y ]
+    goal_dist_range = goal_max_dist - goal_min_dist
+    dist = goal_min_dist + ( random() * goal_dist_range )
+    phi = -pi + ( random() * 2 * pi )
+    x = dist * sin( phi )
+    y = dist * cos( phi )
+    goal = [ x, y ]
 
-      # generate a proximity test geometry for the goal
-      r = MIN_GOAL_CLEARANCE
-      n = 6
-      goal_test_geometry = []
-      for i in range( n ):
-        goal_test_geometry.append(
-            [ x + r*cos( i * 2*pi/n ),
-              y + r*sin( i * 2*pi/n ) ] )
-      goal_test_geometry = Polygon( goal_test_geometry )
-
-      goals.append( goal)
+    # generate a proximity test geometry for the goal
+    r = MIN_GOAL_CLEARANCE
+    n = 6
+    goal_test_geometry = []
+    for i in range( n ):
+      goal_test_geometry.append(
+          [ x + r*cos( i * 2*pi/n ),
+            y + r*sin( i * 2*pi/n ) ] )
+    goal_test_geometry = Polygon( goal_test_geometry )
     
     # generate the obstacles
     obstacles = []
@@ -117,7 +114,7 @@ class MapManager:
     
     # update the current obstacles and goal
     self.current_obstacles = obstacles
-    self.current_goal = goals
+    self.current_goal = goal
     
     # apply the new obstacles and goal to the world
     self.apply_to_world( world )
@@ -141,8 +138,6 @@ class MapManager:
       world.add_obstacle( obstacle )
       
     # program the robot supervisors
-    Indx  = 0
     for robot in world.robots:
-      robot.supervisor.goal = self.current_goal[Indx]
-      Indx = Indx + 1
+      robot.supervisor.goal = self.current_goal[:]
       

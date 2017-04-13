@@ -89,7 +89,7 @@ class Viewer:
     self.button_step.set_image( step_image )
     self.button_step.set_image_position( gtk.POS_LEFT )
     self.button_step.connect( 'clicked', self.on_step )
-    
+   
     # build the reset button
     self.button_reset = gtk.Button( 'Reset' )
     reset_image = gtk.Image()
@@ -128,7 +128,15 @@ class Viewer:
     self._decorate_draw_invisibles_button_inactive()
     self.button_draw_invisibles.set_image_position( gtk.POS_LEFT )
     self.button_draw_invisibles.connect( 'clicked', self.on_draw_invisibles )
-    
+
+    # # build the Distributed Algorithm button
+    # self.button_dist_algo = gtk.Button( 'Distributed Algorithm' )
+    # step_image = gtk.Image()
+    # step_image.set_from_stock( gtk.STOCK_MEDIA_NEXT, gtk.ICON_SIZE_BUTTON )
+    # self.button_dist_algo.set_image( dist_algo_image )
+    # self.button_dist_algo.set_image_position( gtk.POS_LEFT )
+    # self.button_dist_algo.connect( 'clicked', self.on_step )    
+
     # == lay out the window
     
     # pack the simulation control buttons
