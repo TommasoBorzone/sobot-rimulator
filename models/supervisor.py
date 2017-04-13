@@ -46,8 +46,8 @@ class Supervisor:
                       wheel_encoder_ticks_per_rev,                # the number of wheel encoder ticks per revolution of a drive wheel
                       sensor_placements,                          # placement pose of the sensors on the robot body
                       sensor_range,                               # max detection range of the sensors
-                      goal = [ 0.0, 0.0 ],                        # the goal to which this supervisor will guide the robot
-                      initial_pose_args = [ 0.0, 0.0, 0.0 ] ):    # the pose the robot will have when control begins
+                      initial_pose,                               # the pose the robot will have when control begins
+                      goal = [ 0.0, 0.0 ] ):                      # the goal to which this supervisor will guide the robot
     
     # internal clock time in seconds
     self.time = 0.0
@@ -80,7 +80,7 @@ class Supervisor:
 
     # state
     self.proximity_sensor_distances = [ 0.0, 0.0 ] * len( sensor_placements )   # sensor distances
-    self.estimated_pose = Pose( *initial_pose_args )                            # estimated pose
+    self.estimated_pose = initial_pose                                          # estimated pose
     self.current_controller = self.go_to_goal_controller                        # current controller
 
     # goal
