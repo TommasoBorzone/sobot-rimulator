@@ -53,7 +53,7 @@ class Simulator:
     self.period = 1.0 / REFRESH_RATE  # seconds
     
     # gtk simulation event source - for simulation control
-    self.sim_event_source = gobject.idle_add( self.initialize_sim, True ) # we use this opportunity to initialize the sim
+    self.sim_event_source = gobject.idle_add( self.initialize_sim , True ) # we use this opportunity to initialize the sim
     
     # start gtk
     gtk.main()
