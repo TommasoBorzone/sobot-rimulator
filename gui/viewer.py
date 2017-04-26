@@ -121,6 +121,14 @@ class Viewer:
     self.button_random_map.set_image( random_map_image )
     self.button_random_map.set_image_position( gtk.POS_LEFT )
     self.button_random_map.connect( 'clicked', self.on_random_map )
+
+     # build the Dist Algo button
+    self.button_dist_algo = gtk.Button( 'Distributed Algorithm' )
+    dist_algo_image = gtk.Image()
+    dist_algo_image.set_from_stock( gtk.STOCK_REFRESH, gtk.ICON_SIZE_BUTTON )
+    self.button_dist_algo.set_image( dist_algo_image )
+    self.button_dist_algo.set_image_position( gtk.POS_LEFT )
+    self.button_dist_algo.connect( 'clicked', self.on_dist_algo )   
     
     # build the draw-invisibles toggle button
     self.draw_invisibles = False                  # controls whether invisible world elements are displayed
@@ -128,14 +136,6 @@ class Viewer:
     self._decorate_draw_invisibles_button_inactive()
     self.button_draw_invisibles.set_image_position( gtk.POS_LEFT )
     self.button_draw_invisibles.connect( 'clicked', self.on_draw_invisibles )
-
-    # # build the Distributed Algorithm button
-    # self.button_dist_algo = gtk.Button( 'Distributed Algorithm' )
-    # step_image = gtk.Image()
-    # step_image.set_from_stock( gtk.STOCK_MEDIA_NEXT, gtk.ICON_SIZE_BUTTON )
-    # self.button_dist_algo.set_image( dist_algo_image )
-    # self.button_dist_algo.set_image_position( gtk.POS_LEFT )
-    # self.button_dist_algo.connect( 'clicked', self.on_step )    
 
     # == lay out the window
     
@@ -151,6 +151,7 @@ class Viewer:
     map_controls_box.pack_start( self.button_save_map, False, False )
     map_controls_box.pack_start( self.button_load_map, False, False )
     map_controls_box.pack_start( self.button_random_map, False, False )
+    map_controls_box.pack_start( self.button_dist_algo, False, False )
     
     # pack the invisibles button
     invisibles_button_box = gtk.HBox()
@@ -277,6 +278,9 @@ class Viewer:
       
   def on_random_map( self, widget ):
     self.simulator.random_map()
+
+  def on_dist_algo( self, widget ):
+    self.simulator.dist_algo()
     
     
   def on_draw_invisibles( self, widget ):    
@@ -287,8 +291,7 @@ class Viewer:
     else:
       self._decorate_draw_invisibles_button_inactive()
     self.simulator.draw_world()
-    
-    
+     
   def on_expose( self, widget, event ):
     self.painter.draw_frame( self.current_frame )
     

@@ -39,6 +39,7 @@ from views.world_view import *
 from sim_exceptions.collision_exception import *
 
 REFRESH_RATE = 20.0 # hertz
+NUMBER_OF_VEHICLES_DIST_ALGO_CASE = 3 
 
 class Simulator:
 
@@ -59,20 +60,23 @@ class Simulator:
     gtk.main()
     
     
-  def initialize_sim( self, random=False ):
+  def initialize_sim( self, random=False , number_of_vehicle=1, dist_algo=False):
     # reset the viewer
     self.viewer.control_panel_state_init()
     
     # create the simulation world
     self.world = World( self.period )
     
-    # create the robot
-    robot = Robot()
-    self.world.add_robot( robot )
+    # create the robots
+    for Indx in range( 0, number_of_vehicle ):
+      robot = Robot()
+      self.world.add_robot( robot )
     
     # generate a random environment
     if random:
       self.map_manager.random_map( self.world )
+    elif dist_algo:
+      self.map_manager.dist_algo_map( self.world )
     else:
       self.map_manager.apply_to_world( self.world )
     
@@ -121,6 +125,10 @@ class Simulator:
   def random_map( self ):
     self.pause_sim()
     self.initialize_sim( random = True )
+
+  def dist_algo( self ):
+    self.pause_sim()
+    self.initialize_sim(  number_of_vehicle = NUMBER_OF_VEHICLES_DIST_ALGO_CASE , dist_algo=True)
     
     
   def draw_world( self ):

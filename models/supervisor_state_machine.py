@@ -77,13 +77,17 @@ class SupervisorStateMachine:
     elif self.condition_danger():       self.transition_to_state_avoid_obstacles()
     elif self.condition_progress_made() and not self.condition_slide_left():
       self.transition_to_state_go_to_goal()
+    elif not self.condition_progress_made() and not self.condition_slide_left():
+      self.transition_to_state_go_to_goal()
 
   def execute_state_slide_right( self ):
     if self.condition_at_goal():        self.transistion_to_state_at_goal()
     elif self.condition_danger():       self.transition_to_state_avoid_obstacles()
     elif self.condition_progress_made() and not self.condition_slide_right():
       self.transition_to_state_go_to_goal()
-
+    elif not self.condition_progress_made() and not self.condition_slide_right():
+      self.transition_to_state_go_to_goal()
+      
   # def execute_state_gtg_and_ao( self ):
   #   if self.condition_at_goal():        self.transition_to_state_at_goal()
   #   elif self.condition_danger():       self.transition_to_state_avoid_obstacles()
@@ -100,7 +104,7 @@ class SupervisorStateMachine:
 
   def transition_to_state_go_to_goal( self ):
     self.current_state = ControlState.GO_TO_GOAL
-    self.supervisor.current_controller = self.supervisor.go_to_goal_controller
+    self.supervisor.current_controller = self.supervisor.canudas_de_wit_controller
 
   def transition_to_state_slide_left( self ):
     self.current_state = ControlState.SLIDE_LEFT

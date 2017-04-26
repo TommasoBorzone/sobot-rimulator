@@ -46,6 +46,39 @@ class MapManager:
     self.current_obstacles = []
     self.current_goal = None
 
+  def dist_algo_map( self, world ):
+
+    self.current_obstacles[:] = []
+
+    # GOAL PARAMS
+    goal_min_dist = GOAL_MIN_DIST
+    goal_max_dist = GOAL_MAX_DIST
+
+
+    # BUILD RANDOM ELEMENTS
+    # generate the goal
+    goal_dist_range = goal_max_dist - goal_min_dist
+    dist = goal_min_dist + ( random() * goal_dist_range )
+    phi = -pi + ( random() * 2 * pi )
+    x = dist * sin( phi )
+    y = dist * cos( phi )
+    goal = [ x, y ]
+
+    # generate a proximity test geometry for the goal
+    r = MIN_GOAL_CLEARANCE
+    n = 6
+    goal_test_geometry = []
+    for i in range( n ):
+      goal_test_geometry.append(
+          [ x + r*cos( i * 2*pi/n ),
+            y + r*sin( i * 2*pi/n ) ] )
+    goal_test_geometry = Polygon( goal_test_geometry )
+
+    self.current_goal = goal
+    
+    # apply the new obstacles and goal to the world
+    self.apply_to_world( world )    
+
   def random_map( self, world ):
     # OBSTACLE PARAMS
     obs_min_dim = OBS_MIN_DIM

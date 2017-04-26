@@ -33,6 +33,7 @@ from controllers.follow_wall_controller import *
 from controllers.go_to_angle_controller import *
 from controllers.go_to_goal_controller import *
 from controllers.gtg_and_ao_controller import *
+from controllers.canudas_de_wit_controller import *
 
 # control parameters
 K3_TRANS_VEL_LIMIT = 0.3148     # m/s
@@ -74,6 +75,7 @@ class Supervisor:
     self.avoid_obstacles_controller = AvoidObstaclesController( controller_interface )
     self.gtg_and_ao_controller = GTGAndAOController( controller_interface )
     self.follow_wall_controller = FollowWallController( controller_interface )
+    self.canudas_de_wit_controller = CanudasDeWitController( controller_interface )
 
     # state machine
     self.state_machine = SupervisorStateMachine( self )
@@ -81,7 +83,7 @@ class Supervisor:
     # state
     self.proximity_sensor_distances = [ 0.0, 0.0 ] * len( sensor_placements )   # sensor distances
     self.estimated_pose = initial_pose                                          # estimated pose
-    self.current_controller = self.go_to_goal_controller                        # current controller
+    self.current_controller = self.canudas_de_wit_controller                    # current controller
 
     # goal
     self.goal = goal
@@ -129,6 +131,7 @@ class Supervisor:
     self.avoid_obstacles_controller.update_heading()
     self.gtg_and_ao_controller.update_heading()
     self.follow_wall_controller.update_heading()
+    self.canudas_de_wit_controller.update_variables()
 
   # update the distances indicated by the proximity sensors
   def _update_proximity_sensor_distances( self ):
